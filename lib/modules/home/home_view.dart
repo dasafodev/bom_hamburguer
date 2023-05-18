@@ -1,24 +1,26 @@
 import 'package:bom_hamburguer/models/product_model.dart';
-import 'package:bom_hamburguer/utils/assets.dart';
 import 'package:flutter/material.dart';
 
-class HomeView extends StatelessWidget {
-  final List<Product> sandwiches = [
-    Product(
-      name: 'X Burger',
-      price: 5.0,
-      image: Assets.burguer,
-    ),
-    Product(name: 'X Egg', price: 4.5, image: Assets.egg),
-    Product(name: 'X Bacon', price: 7.0, image: Assets.bacon),
-  ];
+import 'home_controller.dart';
+import 'product_list.dart';
 
-  final List<Product> extras = [
-    Product(name: 'Fries', price: 2.0, image: Assets.fries),
-    Product(name: 'Soft drink', price: 2.5, image: Assets.drink),
-  ];
+class HomeView extends StatefulWidget {
+  static const route = '/';
 
-  HomeView({super.key});
+  const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final HomeController controller = HomeController();
+
+  void addToCart(Product product) {
+    setState(() {
+      controller.addToCart(product);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +55,9 @@ class HomeView extends StatelessWidget {
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
-                    child: const Text(
-                      '3',
-                      style: TextStyle(
+                    child: Text(
+                      controller.cartCount,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                       ),
@@ -67,38 +69,22 @@ class HomeView extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            // Go to cart logic here
+            controller.goToCart();
           },
         ),
         body: TabBarView(
           children: [
-            buildProductList(sandwiches),
-            buildProductList(extras),
+            ProductList(
+              products: controller.sandwiches,
+              onAddToCart: addToCart,
+            ),
+            ProductList(
+              products: controller.extras,
+              onAddToCart: addToCart,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildProductList(List<Product> products) {
-    return ListView.builder(
-      itemCount: products.length,
-      padding: const EdgeInsets.only(top: 12),
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(products[index].image)),
-          title: Text(products[index].name),
-          subtitle: Text('\$${products[index].price.toStringAsFixed(2)}'),
-          trailing: ElevatedButton(
-            child: const Text('Add to cart'),
-            onPressed: () {
-              // Add product to cart logic here
-            },
-          ),
-        );
-      },
     );
   }
 }
