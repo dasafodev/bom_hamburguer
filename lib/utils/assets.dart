@@ -4,4 +4,6 @@ class Assets {
   static const drink = 'assets/drink.jpeg';
   static const egg = 'assets/egg.jpeg';
   static const fries = 'assets/fries.jpeg';
+  static const background = 'assets/background.jpg';
+  static const payment = 'assets/payment.json';
 }

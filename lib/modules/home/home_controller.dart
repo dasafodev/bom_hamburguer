@@ -24,7 +24,5 @@ class HomeController {
     cart.add(product);
   }
 
-  void goToCart() {}
-
   String get cartCount => cart.count.toString();
 }

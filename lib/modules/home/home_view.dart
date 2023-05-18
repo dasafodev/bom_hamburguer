@@ -1,11 +1,12 @@
 import 'package:bom_hamburguer/models/product_model.dart';
+import 'package:bom_hamburguer/modules/cart/cart_view.dart';
 import 'package:flutter/material.dart';
 
 import 'home_controller.dart';
 import 'product_list.dart';
 
 class HomeView extends StatefulWidget {
-  static const route = '/';
+  static const route = '/home';
 
   const HomeView({super.key});
 
@@ -15,6 +16,15 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final HomeController controller = HomeController();
+
+  @override
+  void didChangeDependencies() {
+    final bool? emptyCart = ModalRoute.of(context)?.settings.arguments as bool?;
+    if (emptyCart == true) {
+      controller.cart.empty();
+    }
+    super.didChangeDependencies();
+  }
 
   void addToCart(Product product) {
     setState(() {
@@ -69,7 +79,11 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
           onPressed: () {
-            controller.goToCart();
+            Navigator.pushNamed(
+              context,
+              CartView.route,
+              arguments: controller.cart,
+            );
           },
         ),
         body: TabBarView(
